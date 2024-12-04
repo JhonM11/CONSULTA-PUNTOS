@@ -16,4 +16,6 @@ public interface PuntosService {
     List<Puntos> findByNombre(String nombre); // Buscar por nombre
 
     List<Puntos> findByIp(String ip); // Buscar por IP
+
+    void delete(Integer codigo); // Eliminar un punto por código
 }

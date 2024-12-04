@@ -44,4 +44,10 @@ public class PuntosController {
     public ResponseEntity<List<Puntos>> findByIp(@PathVariable String ip) {
         return ResponseEntity.ok(puntosService.findByIp(ip));
     }
+
+    @DeleteMapping("/delete/{codigo}")
+    public ResponseEntity<Void> delete(@PathVariable Integer codigo) {
+        puntosService.delete(codigo);
+        return ResponseEntity.noContent().build(); // Respuesta sin contenido
+    }
 }

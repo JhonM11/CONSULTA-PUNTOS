@@ -25,4 +25,6 @@ public interface PuntosRepository extends JpaRepository<Puntos, Integer> {
             "p.pcVenta LIKE %:ip% OR " +
             "p.pcAdmin3 LIKE %:ip%")
     List<Puntos> findByIp(@Param("ip") String ip); // Buscar en múltiples campos relacionados con IP
+
+
 }

@@ -62,4 +62,14 @@ public class PuntosServiceImpl implements PuntosService {
     public List<Puntos> findByIp(String ip) {
         return puntosRepository.findByIp(ip); // Buscar en campos relacionados con IP
     }
+
+    @Override
+    public void delete(Integer codigo) {
+        Optional<Puntos> existingPunto = puntosRepository.findByCodigo(codigo).stream().findFirst();
+        if (existingPunto.isPresent()) {
+            puntosRepository.delete(existingPunto.get());
+        } else {
+            throw new RuntimeException("Punto no encontrado con el código: " + codigo);
+        }
+    }
 }
