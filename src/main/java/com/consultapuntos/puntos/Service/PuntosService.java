@@ -5,6 +5,7 @@ import com.consultapuntos.puntos.Entity.Puntos;
 import java.util.List;
 
 public interface PuntosService {
+
     Puntos create(Puntos punto); // Crear un nuevo registro
 
     Puntos update(Integer codigo, Puntos punto); // Actualizar propiedades por código
@@ -20,5 +21,7 @@ public interface PuntosService {
     void delete(Integer codigo); // Eliminar un punto por código
 
     List<Puntos> findByCodigoAsText(String codigoTexto); // Buscar código como texto
+
+    boolean existsByCodigo(Integer codigo);
 
 }

@@ -3,6 +3,7 @@ package com.consultapuntos.puntos.Service;
 import com.consultapuntos.puntos.Entity.Puntos;
 import com.consultapuntos.puntos.Repository.PuntosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,8 +16,22 @@ public class PuntosServiceImpl implements PuntosService {
     private PuntosRepository puntosRepository;
 
 
+//    public Puntos create(Puntos punto) {
+//        return puntosRepository.save(punto); // Crear un nuevo registro
+//    }
+
+
+    @Override
     public Puntos create(Puntos punto) {
+        if (existsByCodigo(punto.getCodigo())) {
+            throw new DataIntegrityViolationException("Ya existe un punto con el código: " + punto.getCodigo());
+        }
         return puntosRepository.save(punto); // Crear un nuevo registro
+    }
+
+    @Override
+    public boolean existsByCodigo(Integer codigo) {
+        return !puntosRepository.findByCodigo(codigo).isEmpty();
     }
 
 

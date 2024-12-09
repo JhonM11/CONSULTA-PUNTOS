@@ -3,6 +3,8 @@ package com.consultapuntos.puntos.Controllers;
 import com.consultapuntos.puntos.Entity.Puntos;
 import com.consultapuntos.puntos.Service.PuntosService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,8 +19,16 @@ public class PuntosController {
 
     @PostMapping("/create")
     public ResponseEntity<Puntos> create(@RequestBody Puntos punto) {
-        return ResponseEntity.ok(puntosService.create(punto));
+        Puntos creado = puntosService.create(punto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(creado);
     }
+
+    // Manejo de excepciones global dentro del controlador
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<String> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
+
 
     @PutMapping("/update/{codigo}")
     public ResponseEntity<Puntos> update(@PathVariable Integer codigo, @RequestBody Puntos punto) {
