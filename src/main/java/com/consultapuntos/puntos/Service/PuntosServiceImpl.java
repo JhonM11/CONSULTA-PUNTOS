@@ -72,4 +72,10 @@ public class PuntosServiceImpl implements PuntosService {
             throw new RuntimeException("Punto no encontrado con el código: " + codigo);
         }
     }
+
+    @Override
+    public List<Puntos> findByCodigoAsText(String codigoTexto) {
+        return puntosRepository.findByCodigoAsText(codigoTexto);
+    }
+
 }

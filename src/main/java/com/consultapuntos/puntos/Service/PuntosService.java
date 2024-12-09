@@ -18,4 +18,7 @@ public interface PuntosService {
     List<Puntos> findByIp(String ip); // Buscar por IP
 
     void delete(Integer codigo); // Eliminar un punto por código
+
+    List<Puntos> findByCodigoAsText(String codigoTexto); // Buscar código como texto
+
 }

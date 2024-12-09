@@ -50,4 +50,10 @@ public class PuntosController {
         puntosService.delete(codigo);
         return ResponseEntity.noContent().build(); // Respuesta sin contenido
     }
+
+    @GetMapping("/findByCodigoAsText/{codigoTexto}")
+    public ResponseEntity<List<Puntos>> findByCodigoAsText(@PathVariable String codigoTexto) {
+        return ResponseEntity.ok(puntosService.findByCodigoAsText(codigoTexto));
+    }
+
 }

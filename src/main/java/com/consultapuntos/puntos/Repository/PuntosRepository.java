@@ -26,5 +26,9 @@ public interface PuntosRepository extends JpaRepository<Puntos, Integer> {
             "p.pcAdmin3 LIKE %:ip%")
     List<Puntos> findByIp(@Param("ip") String ip); // Buscar en múltiples campos relacionados con IP
 
+    @Query("SELECT p FROM Puntos p WHERE CAST(p.codigo AS string) LIKE CONCAT('%', :codigoTexto, '%')")
+    List<Puntos> findByCodigoAsText(@Param("codigoTexto") String codigoTexto);
+
+
 
 }
