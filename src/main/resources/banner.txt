@@ -5,4 +5,4 @@
  /_/   \_\ .__/| .__/|_|    \__,_|_| |_|\__\___/|___/
          |_|   |_|
 
-::: Developed by John Fredy Morales :::      (v3.4.0)
+::: Developed by John Fredy Morales :::      (v1.0.0)
