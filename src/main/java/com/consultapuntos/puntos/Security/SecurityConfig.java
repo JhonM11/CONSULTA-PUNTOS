@@ -31,9 +31,12 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/puntos/users/create").hasRole("ADMIN")
                         .requestMatchers("/api/v1/puntos/users/inactivate/").hasRole("ADMIN")
                         .requestMatchers("/api/v1/puntos/users/activate/").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/puntos/users/reset-password/").hasRole("ADMIN")
+
 
                         //Autorizaciones para usuarios con ROL ADMIN Y AUXILIAR
                         .requestMatchers("/api/v1/puntos/users/change-passwd").hasAnyRole("ADMIN", "AUXILIAR")
+                        .requestMatchers("/api/v1/puntos/users/mysession").hasAnyRole("ADMIN", "AUXILIAR")
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 

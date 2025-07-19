@@ -2,6 +2,7 @@ package com.consultapuntos.puntos.Service;
 
 import com.consultapuntos.puntos.Dto.CreateUserRequest;
 import com.consultapuntos.puntos.Dto.ChangePasswordRequest;
+import com.consultapuntos.puntos.Dto.UserContextResponse;
 import com.consultapuntos.puntos.Entity.Role;
 import com.consultapuntos.puntos.Entity.User;
 import com.consultapuntos.puntos.Exception.*;
@@ -10,6 +11,7 @@ import com.consultapuntos.puntos.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -128,6 +130,41 @@ public class UserServiceImpl implements UserService {
 
         return ResponseEntity.ok(Map.of("message", "Usuario activado correctamente"));
     }
+
+
+    @Override
+    public ResponseEntity<?> getUserContext() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado"));
+
+        UserContextResponse response = new UserContextResponse(
+                user.getUsername(),
+                user.getName(),
+                user.getLastname(),
+                user.getMail(),
+                user.getCodeuser(),
+                user.getRole().getName()
+        );
+
+        return ResponseEntity.ok(response);
+    }
+
+
+    @Override
+    public ResponseEntity<?> resetPasswordByCodeuser(String codeuser) {
+        User user = userRepository.findAll().stream()
+                .filter(u -> u.getCodeuser().equals(codeuser))
+                .findFirst()
+                .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado"));
+
+        user.setPassword(passwordEncoder.encode(user.getUsername()));
+        userRepository.save(user);
+
+        return ResponseEntity.ok(Map.of("message", "Contraseña restablecida exitosamente"));
+    }
+
 
 
 }

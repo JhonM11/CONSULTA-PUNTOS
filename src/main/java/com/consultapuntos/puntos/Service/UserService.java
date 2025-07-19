@@ -9,4 +9,8 @@ public interface UserService {
     ResponseEntity<?> changePasswordByCodeuser(String codeuser, ChangePasswordRequest request);
     ResponseEntity<?> inactivateUser(String codeuser);
     ResponseEntity<?> activateUser(String codeuser);
+    ResponseEntity<?> getUserContext();
+    ResponseEntity<?> resetPasswordByCodeuser(String codeuser);
+
+
 }

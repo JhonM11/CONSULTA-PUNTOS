@@ -19,6 +19,7 @@ public class UserController {
         return userService.createUser(request);
     }
 
+
     @PatchMapping("/change-passwd/{codeuser}")
     public ResponseEntity<?> changePassword(
             @PathVariable String codeuser,
@@ -32,10 +33,25 @@ public class UserController {
         return userService.inactivateUser(codeuser);
     }
 
+
     @PatchMapping("/activate/{codeuser}")
     public ResponseEntity<?> activateUser(@PathVariable String codeuser) {
         return userService.activateUser(codeuser);
     }
+
+
+    @GetMapping("/mysession")
+    public ResponseEntity<?> getUserContext() {
+        return userService.getUserContext();
+    }
+
+
+    @PatchMapping("/reset-password/{codeuser}")
+    public ResponseEntity<?> resetPassword(@PathVariable String codeuser) {
+        return userService.resetPasswordByCodeuser(codeuser);
+    }
+
+
 
 
 
