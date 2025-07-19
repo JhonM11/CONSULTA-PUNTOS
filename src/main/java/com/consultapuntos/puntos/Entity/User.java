@@ -1,8 +1,10 @@
 package com.consultapuntos.puntos.Entity;
 
+import com.consultapuntos.puntos.Repository.UserRepository;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -41,26 +43,34 @@ public class User implements UserDetails {
     @JoinColumn(name = "role_id")
     private Role role;
 
+    @Transient
+    @Autowired
+    private UserRepository userRepository;
+
     @PrePersist
     public void prePersist() {
-        if (codeuser == null || codeuser.isEmpty()) {
-            this.codeuser = generateUniqueCode();
-        }
         if (fecharegistro == null) {
             this.fecharegistro = LocalDateTime.now();
         }
         if (state == null) {
             this.state = "A";
         }
+        if (codeuser == null || codeuser.isEmpty()) {
+            this.codeuser = generateUniqueCode();
+        }
     }
 
     private String generateUniqueCode() {
-        return UUID.randomUUID().toString().replace("-", "").substring(0, 12);
+        String code;
+        do {
+            code = UUID.randomUUID().toString().replace("-", "").substring(0, 12);
+        } while (userRepository != null && userRepository.existsByCodeuser(code));
+        return code;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.emptyList();
+        return Collections.singleton(() -> "ROLE_" + this.role.getName());
     }
 
     @Override

@@ -26,6 +26,14 @@ public class SecurityConfig {
         http.csrf().disable()
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/puntos/auth/**").permitAll()
+                        //Autorizaciones para el usuarios con ROL ADMIN
+
+                        .requestMatchers("/api/v1/puntos/users/create").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/puntos/users/inactivate/").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/puntos/users/activate/").hasRole("ADMIN")
+
+                        //Autorizaciones para usuarios con ROL ADMIN Y AUXILIAR
+                        .requestMatchers("/api/v1/puntos/users/change-passwd").hasAnyRole("ADMIN", "AUXILIAR")
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
