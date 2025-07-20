@@ -33,6 +33,11 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/puntos/users/activate/").hasRole("ADMIN")
                         .requestMatchers("/api/v1/puntos/users/reset-password/").hasRole("ADMIN")
 
+                        .requestMatchers("/api/v1/puntos/tipo-conexiones/findTypeConnectionBycode/**").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/puntos/tipo-conexiones/getAllConnection").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/puntos/tipo-conexiones/updateTypeConnectionByCode/**").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/puntos/tipo-conexiones/createTypeConnection").hasRole("ADMIN")
+
 
                         //Autorizaciones para usuarios con ROL ADMIN Y AUXILIAR
                         .requestMatchers("/api/v1/puntos/users/change-passwd").hasAnyRole("ADMIN", "AUXILIAR")
