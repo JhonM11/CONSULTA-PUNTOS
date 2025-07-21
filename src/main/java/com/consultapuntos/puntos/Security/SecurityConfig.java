@@ -27,21 +27,43 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/puntos/auth/**").permitAll()
                         //Autorizaciones para el usuarios con ROL ADMIN
-
-                        .requestMatchers("/api/v1/puntos/users/create").hasRole("ADMIN")
-                        .requestMatchers("/api/v1/puntos/users/inactivate/").hasRole("ADMIN")
-                        .requestMatchers("/api/v1/puntos/users/activate/").hasRole("ADMIN")
-                        .requestMatchers("/api/v1/puntos/users/reset-password/").hasRole("ADMIN")
-
-                        .requestMatchers("/api/v1/puntos/tipo-conexiones/findTypeConnectionBycode/**").hasRole("ADMIN")
-                        .requestMatchers("/api/v1/puntos/tipo-conexiones/getAllConnection").hasRole("ADMIN")
-                        .requestMatchers("/api/v1/puntos/tipo-conexiones/updateTypeConnectionByCode/**").hasRole("ADMIN")
-                        .requestMatchers("/api/v1/puntos/tipo-conexiones/createTypeConnection").hasRole("ADMIN")
+                        // ****** ENTIDAD PUNTOS *******
+                        .requestMatchers("/api/v1/puntos/create").hasAnyRole("ADMIN")
+                        .requestMatchers("/api/v1/puntos/delete/**").hasAnyRole("ADMIN")
 
 
-                        //Autorizaciones para usuarios con ROL ADMIN Y AUXILIAR
-                        .requestMatchers("/api/v1/puntos/users/change-passwd").hasAnyRole("ADMIN", "AUXILIAR")
-                        .requestMatchers("/api/v1/puntos/users/mysession").hasAnyRole("ADMIN", "AUXILIAR")
+                        //Autorizaciones para el usuarios con ROL ADMIN y COORDINADOR
+                        // ****** ENTIDAD USER *******
+                        .requestMatchers("/api/v1/puntos/users/create").hasAnyRole("ADMIN","COORDINADOR")
+                        .requestMatchers("/api/v1/puntos/users/inactivate/").hasAnyRole("ADMIN","COORDINADOR")
+                        .requestMatchers("/api/v1/puntos/users/activate/").hasAnyRole("ADMIN","COORDINADOR")
+                        .requestMatchers("/api/v1/puntos/users/reset-password/").hasAnyRole("ADMIN","COORDINADOR")
+                        .requestMatchers("/api/v1/puntos/update/**").hasAnyRole("ADMIN","COORDINADOR")
+
+                        // ****** ENTIDAD TIPO CONEXION *******
+                        .requestMatchers("/api/v1/puntos/tipo-conexiones/findTypeConnectionBycode/**").hasAnyRole("ADMIN","COORDINADOR")
+                        .requestMatchers("/api/v1/puntos/tipo-conexiones/getAllConnection").hasAnyRole("ADMIN","COORDINADOR")
+                        .requestMatchers("/api/v1/puntos/tipo-conexiones/updateTypeConnectionByCode/**").hasAnyRole("ADMIN","COORDINADOR")
+                        .requestMatchers("/api/v1/puntos/tipo-conexiones/createTypeConnection").hasAnyRole("ADMIN","COORDINADOR")
+
+                        // ****** ENTIDAD ZONAS *******
+                        .requestMatchers("/api/v1/puntos/zonas/findByCode/**").hasAnyRole("ADMIN","COORDINADOR")
+                        .requestMatchers("/api/v1/puntos/zonas/getAll").hasAnyRole("ADMIN","COORDINADOR")
+                        .requestMatchers("/api/v1/puntos/zonas/updateNameByCode/**").hasAnyRole("ADMIN","COORDINADOR")
+                        .requestMatchers("/api/v1/puntos/zonas/create").hasAnyRole("ADMIN","COORDINADOR")
+
+
+                        //Autorizaciones para usuarios con ROL ADMIN, COORDINADOR y AUXILIAR
+                        // ****** ENTIDAD USER *******
+                        .requestMatchers("/api/v1/puntos/users/change-passwd").hasAnyRole("ADMIN","COORDINADOR","AUXILIAR")
+                        .requestMatchers("/api/v1/puntos/users/mysession").hasAnyRole("ADMIN","COORDINADOR", "AUXILIAR")
+
+                        // ****** ENTIDAD PUNTOS *******
+                        .requestMatchers("/api/v1/puntos/list").hasAnyRole("ADMIN","COORDINADOR", "AUXILIAR")
+                        .requestMatchers("/api/v1/puntos/findByCodigo/**").hasAnyRole("ADMIN","COORDINADOR", "AUXILIAR")
+                        .requestMatchers("/api/v1/puntos/findByNombre/**").hasAnyRole("ADMIN","COORDINADOR", "AUXILIAR")
+                        .requestMatchers("/api/v1/puntos/findByIp/**").hasAnyRole("ADMIN","COORDINADOR", "AUXILIAR")
+                        .requestMatchers("/api/v1/puntos/findByCodigoAsText/**").hasAnyRole("ADMIN","COORDINADOR", "AUXILIAR")
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 

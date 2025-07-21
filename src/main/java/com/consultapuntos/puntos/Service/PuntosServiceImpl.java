@@ -16,11 +16,6 @@ public class PuntosServiceImpl implements PuntosService {
     private PuntosRepository puntosRepository;
 
 
-//    public Puntos create(Puntos punto) {
-//        return puntosRepository.save(punto); // Crear un nuevo registro
-//    }
-
-
     @Override
     public Puntos create(Puntos punto) {
         if (existsByCodigo(punto.getCodigo())) {
