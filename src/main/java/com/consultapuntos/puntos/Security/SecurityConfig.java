@@ -52,6 +52,12 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/puntos/zonas/updateNameByCode/**").hasAnyRole("ADMIN","COORDINADOR")
                         .requestMatchers("/api/v1/puntos/zonas/create").hasAnyRole("ADMIN","COORDINADOR")
 
+                        // ****** ENTIDAD CENTROS DE COSTO *******
+                        .requestMatchers("/api/v1/puntos/centros-costos/findByCode/**").hasAnyRole("ADMIN","COORDINADOR")
+                        .requestMatchers("/api/v1/puntos/centros-costos/list").hasAnyRole("ADMIN","COORDINADOR")
+                        .requestMatchers("/api/v1/puntos/centros-costos/updateName/**").hasAnyRole("ADMIN","COORDINADOR")
+                        .requestMatchers("/api/v1/puntos/centros-costos/create").hasAnyRole("ADMIN","COORDINADOR")
+
 
                         //Autorizaciones para usuarios con ROL ADMIN, COORDINADOR y AUXILIAR
                         // ****** ENTIDAD USER *******
