@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 @CrossOrigin(origins = "*")
 @RestController
@@ -72,6 +74,44 @@ public class PuntosController {
         puntosService.delete(codigo);
         return ResponseEntity.noContent().build(); // Respuesta sin contenido
     }
+
+
+    @GetMapping("/reports")
+    public ResponseEntity<byte[]> descargarReporte(
+            @RequestParam(required = false) Integer tipoConexionCode,
+            @RequestParam(required = false) Integer zonaCode,
+            @RequestParam(required = false) Integer centroCostoCode) {
+
+        byte[] archivo = puntosService.generateReport(tipoConexionCode, zonaCode, centroCostoCode);
+
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "attachment; filename=reporte_puntos.xlsx")
+                .header("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                .body(archivo);
+    }
+
+
+    @GetMapping("/reports-FormatAnsible")
+    public ResponseEntity<byte[]> descargarReporteWirelessTxt(
+            @RequestParam(required = false) Integer centroCostoCode,
+            @RequestParam(required = false) Integer zonaCode,
+            @RequestParam(defaultValue = "puntos_formato_ansible") String filename) {
+
+        byte[] archivo = puntosService.generatePlainTextReportForWireless(centroCostoCode, zonaCode);
+
+        // Codificar el nombre para que respete espacios en el header HTTP
+        String encodedFilename = URLEncoder.encode(filename.trim(), StandardCharsets.UTF_8)
+                .replace("+", " "); // Para que los espacios se vean como tal
+
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "attachment; filename=\"" + encodedFilename + "\"")
+                .header("Content-Type", "text/plain")
+                .body(archivo);
+    }
+
+
+
+
 
 
 

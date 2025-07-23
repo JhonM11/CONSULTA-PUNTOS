@@ -33,12 +33,14 @@ public class SecurityConfig {
 
 
                         //Autorizaciones para el usuarios con ROL ADMIN y COORDINADOR
-                        // ****** ENTIDAD USER *******
+                        // ****** ENTIDAD PUNTOS *******
                         .requestMatchers("/api/v1/puntos/users/create").hasAnyRole("ADMIN","COORDINADOR")
                         .requestMatchers("/api/v1/puntos/users/inactivate/").hasAnyRole("ADMIN","COORDINADOR")
                         .requestMatchers("/api/v1/puntos/users/activate/").hasAnyRole("ADMIN","COORDINADOR")
                         .requestMatchers("/api/v1/puntos/users/reset-password/").hasAnyRole("ADMIN","COORDINADOR")
                         .requestMatchers("/api/v1/puntos/update/**").hasAnyRole("ADMIN","COORDINADOR")
+                        .requestMatchers("/api/v1/puntos/reports/**").hasAnyRole("ADMIN","COORDINADOR")
+                        .requestMatchers("/api/v1/puntos/reports-FormatAnsible/**").hasAnyRole("ADMIN","COORDINADOR")
 
                         // ****** ENTIDAD TIPO CONEXION *******
                         .requestMatchers("/api/v1/puntos/tipo-conexiones/findTypeConnectionBycode/**").hasAnyRole("ADMIN","COORDINADOR")

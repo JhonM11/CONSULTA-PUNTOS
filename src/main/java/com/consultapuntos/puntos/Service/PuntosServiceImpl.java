@@ -14,6 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -193,4 +199,77 @@ public class PuntosServiceImpl implements PuntosService {
                 .map(this::mapToDto)
                 .collect(Collectors.toList());
     }
+
+
+    @Override
+    public byte[] generateReport(Integer tipoConexionCode, Integer zonaCode, Integer centroCostoCode) {
+        List<Puntos> puntos = puntosRepository.findAll().stream()
+                .filter(p -> tipoConexionCode == null || p.getTipoConexion().getCode().equals(tipoConexionCode))
+                .filter(p -> zonaCode == null || p.getZona().getCode().equals(zonaCode))
+                .filter(p -> centroCostoCode == null || p.getCentroCosto().getCode().equals(centroCostoCode))
+                .collect(Collectors.toList());
+
+        try (Workbook workbook = new XSSFWorkbook()) {
+            Sheet sheet = workbook.createSheet("Reporte Puntos");
+
+            Row header = sheet.createRow(0);
+            String[] columns = {"Código", "Nombre", "Tecnología", "Observación", "IP Radio", "IP Teléfono",
+                    "Raspberry", "Rbetplay", "DVR", "PC Venta", "PC Admin1", "PC Admin2", "PC Admin3",
+                    "Nota", "Tipo Conexión", "Zona", "Centro Costo"};
+            for (int i = 0; i < columns.length; i++) {
+                header.createCell(i).setCellValue(columns[i]);
+            }
+
+            int rowIdx = 1;
+            for (Puntos p : puntos) {
+                Row row = sheet.createRow(rowIdx++);
+                row.createCell(0).setCellValue(p.getCodigo());
+                row.createCell(1).setCellValue(p.getNombre());
+                row.createCell(2).setCellValue(p.getTecnologia());
+                row.createCell(3).setCellValue(p.getObservacion());
+                row.createCell(4).setCellValue(p.getIpRadio());
+                row.createCell(5).setCellValue(p.getIpTelefono());
+                row.createCell(6).setCellValue(p.getRaspberry());
+                row.createCell(7).setCellValue(p.getRbetplay());
+                row.createCell(8).setCellValue(p.getDvr());
+                row.createCell(9).setCellValue(p.getPcVenta());
+                row.createCell(10).setCellValue(p.getPcAdmin1());
+                row.createCell(11).setCellValue(p.getPcAdmin2());
+                row.createCell(12).setCellValue(p.getPcAdmin3());
+                row.createCell(13).setCellValue(p.getNota());
+                row.createCell(14).setCellValue(p.getTipoConexion().getName());
+                row.createCell(15).setCellValue(p.getZona().getName());
+                row.createCell(16).setCellValue(p.getCentroCosto().getName());
+            }
+
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            workbook.write(out);
+            return out.toByteArray();
+
+        } catch (IOException e) {
+            throw new RuntimeException("Error generando el Excel", e);
+        }
+    }
+
+
+    @Override
+    public byte[] generatePlainTextReportForWireless(Integer centroCostoCode, Integer zonaCode) {
+        List<Puntos> puntos = puntosRepository.findAll().stream()
+                .filter(p -> p.getTipoConexion() != null && p.getTipoConexion().getCode() == 2)
+                .filter(p -> centroCostoCode == null || (p.getCentroCosto() != null && p.getCentroCosto().getCode().equals(centroCostoCode)))
+                .filter(p -> zonaCode == null || (p.getZona() != null && p.getZona().getCode().equals(zonaCode)))
+                .collect(Collectors.toList());
+
+        StringBuilder sb = new StringBuilder();
+        for (Puntos p : puntos) {
+            String nombreFormateado = p.getNombre().trim().replaceAll("\\s+", "_");
+            String linea = String.format("%-30s ansible_ssh_host=%s", p.getCodigo() + "_" + nombreFormateado, p.getPcVenta());
+            sb.append(linea).append(System.lineSeparator());
+        }
+
+        return sb.toString().getBytes(StandardCharsets.UTF_8);
+    }
+
+
+
 }
