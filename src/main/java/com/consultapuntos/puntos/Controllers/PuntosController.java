@@ -1,5 +1,8 @@
 package com.consultapuntos.puntos.Controllers;
 
+import com.consultapuntos.puntos.Dto.CreatePointRequest;
+import com.consultapuntos.puntos.Dto.PointResponse;
+import com.consultapuntos.puntos.Dto.UpdatePointRequest;
 import com.consultapuntos.puntos.Entity.Puntos;
 import com.consultapuntos.puntos.Service.PuntosService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +21,11 @@ public class PuntosController {
     private PuntosService puntosService;
 
     @PostMapping("/create")
-    public ResponseEntity<Puntos> create(@RequestBody Puntos punto) {
-        Puntos creado = puntosService.create(punto);
+    public ResponseEntity<PointResponse> create(@RequestBody CreatePointRequest request) {
+        PointResponse creado = puntosService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(creado);
     }
+
 
     // Manejo de excepciones global dentro del controlador
     @ExceptionHandler(DataIntegrityViolationException.class)
@@ -31,29 +35,37 @@ public class PuntosController {
 
 
     @PutMapping("/update/{codigo}")
-    public ResponseEntity<Puntos> update(@PathVariable Integer codigo, @RequestBody Puntos punto) {
-        return ResponseEntity.ok(puntosService.update(codigo, punto));
+    public ResponseEntity<PointResponse> update(@PathVariable Integer codigo, @RequestBody UpdatePointRequest request) {
+        PointResponse actualizado = puntosService.update(codigo, request);
+        return ResponseEntity.ok(actualizado);
     }
 
+
     @GetMapping("/list")
-    public ResponseEntity<List<Puntos>> list() {
+    public ResponseEntity<List<PointResponse>> list() {
         return ResponseEntity.ok(puntosService.list());
     }
 
     @GetMapping("/findByCodigo/{codigo}")
-    public ResponseEntity<List<Puntos>> findByCodigo(@PathVariable Integer codigo) {
+    public ResponseEntity<List<PointResponse>> findByCodigo(@PathVariable Integer codigo) {
         return ResponseEntity.ok(puntosService.findByCodigo(codigo));
     }
 
     @GetMapping("/findByNombre/{nombre}")
-    public ResponseEntity<List<Puntos>> findByNombre(@PathVariable String nombre) {
+    public ResponseEntity<List<PointResponse>> findByNombre(@PathVariable String nombre) {
         return ResponseEntity.ok(puntosService.findByNombre(nombre));
     }
 
     @GetMapping("/findByIp/{ip}")
-    public ResponseEntity<List<Puntos>> findByIp(@PathVariable String ip) {
+    public ResponseEntity<List<PointResponse>> findByIp(@PathVariable String ip) {
         return ResponseEntity.ok(puntosService.findByIp(ip));
     }
+
+    @GetMapping("/findByCodigoAsText/{texto}")
+    public ResponseEntity<List<PointResponse>> findByCodigoAsText(@PathVariable String texto) {
+        return ResponseEntity.ok(puntosService.findByCodigoAsText(texto));
+    }
+
 
     @DeleteMapping("/delete/{codigo}")
     public ResponseEntity<Void> delete(@PathVariable Integer codigo) {
@@ -61,9 +73,6 @@ public class PuntosController {
         return ResponseEntity.noContent().build(); // Respuesta sin contenido
     }
 
-    @GetMapping("/findByCodigoAsText/{codigoTexto}")
-    public ResponseEntity<List<Puntos>> findByCodigoAsText(@PathVariable String codigoTexto) {
-        return ResponseEntity.ok(puntosService.findByCodigoAsText(codigoTexto));
-    }
+
 
 }

@@ -19,7 +19,7 @@ public interface PuntosRepository extends JpaRepository<Puntos, Integer> {
             "p.ipTelefono LIKE %:ip% OR " +
             "p.pcAdmin1 LIKE %:ip% OR " +
             "p.pcAdmin2 LIKE %:ip% OR " +
-            "p.rBetplay LIKE %:ip% OR " +
+            "p.rbetplay LIKE %:ip% OR " +   // <-- minúscula corregida aquí
             "p.dvr LIKE %:ip% OR " +
             "p.raspberry LIKE %:ip% OR " +
             "p.pcVenta LIKE %:ip% OR " +

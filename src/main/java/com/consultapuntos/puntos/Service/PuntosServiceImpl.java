@@ -1,13 +1,22 @@
 package com.consultapuntos.puntos.Service;
 
+import com.consultapuntos.puntos.Dto.*;
+import com.consultapuntos.puntos.Entity.CentroCosto;
 import com.consultapuntos.puntos.Entity.Puntos;
+import com.consultapuntos.puntos.Entity.TipoConexion;
+import com.consultapuntos.puntos.Entity.Zona;
+import com.consultapuntos.puntos.Exception.NotFoundException;
+import com.consultapuntos.puntos.Repository.CentroCostoRepository;
 import com.consultapuntos.puntos.Repository.PuntosRepository;
+import com.consultapuntos.puntos.Repository.TipoConexionRepository;
+import com.consultapuntos.puntos.Repository.ZonaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PuntosServiceImpl implements PuntosService {
@@ -15,13 +24,87 @@ public class PuntosServiceImpl implements PuntosService {
     @Autowired
     private PuntosRepository puntosRepository;
 
+    @Autowired
+    private CentroCostoRepository centroCostoRepository;
+
+    @Autowired
+    private ZonaRepository zonaRepository;
+
+    @Autowired
+    private TipoConexionRepository tipoConexionRepository;
 
     @Override
-    public Puntos create(Puntos punto) {
-        if (existsByCodigo(punto.getCodigo())) {
-            throw new DataIntegrityViolationException("Ya existe un punto con el código: " + punto.getCodigo());
+    public PointResponse create(CreatePointRequest request) {
+        if (existsByCodigo(request.getCodigo())) {
+            throw new DataIntegrityViolationException("Ya existe un punto con el código: " + request.getCodigo());
         }
-        return puntosRepository.save(punto); // Crear un nuevo registro
+
+        CentroCosto centro = centroCostoRepository.findByCode(request.getCentroCostoCode())
+                .orElseThrow(() -> new NotFoundException("Centro de costo no encontrado"));
+
+        Zona zona = zonaRepository.findByCode(request.getZonaCode())
+                .orElseThrow(() -> new NotFoundException("Zona no encontrada"));
+
+        TipoConexion tipoConexion = tipoConexionRepository.findByCode(request.getTipoConexionCode())
+                .orElseThrow(() -> new NotFoundException("Tipo de conexión no encontrado"));
+
+        Puntos punto = new Puntos();
+        punto.setCodigo(request.getCodigo());
+        punto.setNombre(request.getNombre());
+        punto.setCentroCosto(centro);
+        punto.setZona(zona);
+        punto.setTipoConexion(tipoConexion);
+        punto.setTecnologia(defaultIfNull(request.getTecnologia()));
+        punto.setObservacion(defaultIfNull(request.getObservacion()));
+        punto.setIpRadio(defaultIfNull(request.getIpRadio()));
+        punto.setIpTelefono(defaultIfNull(request.getIpTelefono()));
+        punto.setRaspberry(defaultIfNull(request.getRaspberry()));
+        punto.setRbetplay(defaultIfNull(request.getRbetplay()));
+        punto.setDvr(defaultIfNull(request.getDvr()));
+        punto.setPcVenta(defaultIfNull(request.getPcVenta()));
+        punto.setPcAdmin1(defaultIfNull(request.getPcAdmin1()));
+        punto.setPcAdmin2(defaultIfNull(request.getPcAdmin2()));
+        punto.setPcAdmin3(defaultIfNull(request.getPcAdmin3()));
+        punto.setNota(defaultIfNull(request.getNota()));
+
+        Puntos creado = puntosRepository.save(punto);
+
+        return mapToDto(creado);
+    }
+
+    private String defaultIfNull(String value) {
+        return value != null ? value : "";
+    }
+
+    private PointResponse mapToDto(Puntos punto) {
+        return PointResponse.builder()
+                .codigo(punto.getCodigo())
+                .nombre(punto.getNombre())
+                .tecnologia(punto.getTecnologia())
+                .observacion(punto.getObservacion())
+                .ipRadio(punto.getIpRadio())
+                .ipTelefono(punto.getIpTelefono())
+                .raspberry(punto.getRaspberry())
+                .rbetplay(punto.getRbetplay())
+                .dvr(punto.getDvr())
+                .pcVenta(punto.getPcVenta())
+                .pcAdmin1(punto.getPcAdmin1())
+                .pcAdmin2(punto.getPcAdmin2())
+                .pcAdmin3(punto.getPcAdmin3())
+                .nota(punto.getNota())
+                .tipoConexion(PointResponse.RelatedData.builder()
+                        .code(punto.getTipoConexion().getCode())
+                        .name(punto.getTipoConexion().getName())
+                        .build())
+                .zona(PointResponse.RelatedData.builder()
+                        .code(punto.getZona().getCode())
+                        .name(punto.getZona().getName())
+                        .build())
+                .centroCosto(PointResponse.RelatedData.builder()
+                        .code(punto.getCentroCosto().getCode())
+                        .name(punto.getCentroCosto().getName())
+                        .build())
+                .build();
     }
 
     @Override
@@ -29,48 +112,69 @@ public class PuntosServiceImpl implements PuntosService {
         return !puntosRepository.findByCodigo(codigo).isEmpty();
     }
 
-
-    public Puntos update(Integer codigo, Puntos punto) {
+    @Override
+    public PointResponse update(Integer codigo, UpdatePointRequest request) {
         Optional<Puntos> existingPunto = puntosRepository.findByCodigo(codigo).stream().findFirst();
-        if (existingPunto.isPresent()) {
-            Puntos updatedPunto = existingPunto.get();
-            updatedPunto.setNombre(punto.getNombre());
-            updatedPunto.setCentroCosto(punto.getCentroCosto());
-            updatedPunto.setTecnologia(punto.getTecnologia());
-            updatedPunto.setObservacion(punto.getObservacion());
-            updatedPunto.setIpRadio(punto.getIpRadio());
-            updatedPunto.setIpTelefono(punto.getIpTelefono());
-            updatedPunto.setRaspberry(punto.getRaspberry());
-            updatedPunto.setrBetplay(punto.getrBetplay());
-            updatedPunto.setDvr(punto.getDvr());
-            updatedPunto.setPcVenta(punto.getPcVenta());
-            updatedPunto.setPcAdmin1(punto.getPcAdmin1());
-            updatedPunto.setPcAdmin2(punto.getPcAdmin2());
-            updatedPunto.setPcAdmin3(punto.getPcAdmin3());
-            updatedPunto.setNota(punto.getNota());
-            return puntosRepository.save(updatedPunto);
+        if (existingPunto.isEmpty()) {
+            throw new NotFoundException("Punto no encontrado con el código: " + codigo);
         }
-        throw new RuntimeException("Punto no encontrado con el código: " + codigo);
+
+        CentroCosto centro = centroCostoRepository.findByCode(request.getCentroCostoCode())
+                .orElseThrow(() -> new NotFoundException("Centro de costo no encontrado"));
+
+        Zona zona = zonaRepository.findByCode(request.getZonaCode())
+                .orElseThrow(() -> new NotFoundException("Zona no encontrada"));
+
+        TipoConexion tipoConexion = tipoConexionRepository.findByCode(request.getTipoConexionCode())
+                .orElseThrow(() -> new NotFoundException("Tipo de conexión no encontrado"));
+
+        Puntos punto = existingPunto.get();
+        punto.setNombre(request.getNombre());
+        punto.setCentroCosto(centro);
+        punto.setZona(zona);
+        punto.setTipoConexion(tipoConexion);
+        punto.setTecnologia(defaultIfNull(request.getTecnologia()));
+        punto.setObservacion(defaultIfNull(request.getObservacion()));
+        punto.setIpRadio(defaultIfNull(request.getIpRadio()));
+        punto.setIpTelefono(defaultIfNull(request.getIpTelefono()));
+        punto.setRaspberry(defaultIfNull(request.getRaspberry()));
+        punto.setRbetplay(defaultIfNull(request.getRbetplay()));
+        punto.setDvr(defaultIfNull(request.getDvr()));
+        punto.setPcVenta(defaultIfNull(request.getPcVenta()));
+        punto.setPcAdmin1(defaultIfNull(request.getPcAdmin1()));
+        punto.setPcAdmin2(defaultIfNull(request.getPcAdmin2()));
+        punto.setPcAdmin3(defaultIfNull(request.getPcAdmin3()));
+        punto.setNota(defaultIfNull(request.getNota()));
+
+        return mapToDto(puntosRepository.save(punto));
     }
 
-
-    public List<Puntos> list() {
-        return puntosRepository.findAll(); // Listar todos los registros
+    @Override
+    public List<PointResponse> list() {
+        return puntosRepository.findAll().stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
     }
 
-
-    public List<Puntos> findByCodigo(Integer codigo) {
-        return puntosRepository.findByCodigo(codigo); // Buscar por código
+    @Override
+    public List<PointResponse> findByCodigo(Integer codigo) {
+        return puntosRepository.findByCodigo(codigo).stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
     }
 
-
-    public List<Puntos> findByNombre(String nombre) {
-        return puntosRepository.findByNombreContainingIgnoreCase(nombre); // Buscar por nombre (like)
+    @Override
+    public List<PointResponse> findByNombre(String nombre) {
+        return puntosRepository.findByNombreContainingIgnoreCase(nombre).stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
     }
 
-
-    public List<Puntos> findByIp(String ip) {
-        return puntosRepository.findByIp(ip); // Buscar en campos relacionados con IP
+    @Override
+    public List<PointResponse> findByIp(String ip) {
+        return puntosRepository.findByIp(ip).stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -79,13 +183,14 @@ public class PuntosServiceImpl implements PuntosService {
         if (existingPunto.isPresent()) {
             puntosRepository.delete(existingPunto.get());
         } else {
-            throw new RuntimeException("Punto no encontrado con el código: " + codigo);
+            throw new NotFoundException("Punto no encontrado con el código: " + codigo);
         }
     }
 
     @Override
-    public List<Puntos> findByCodigoAsText(String codigoTexto) {
-        return puntosRepository.findByCodigoAsText(codigoTexto);
+    public List<PointResponse> findByCodigoAsText(String codigoTexto) {
+        return puntosRepository.findByCodigoAsText(codigoTexto).stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
     }
-
 }

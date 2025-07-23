@@ -1,27 +1,25 @@
 package com.consultapuntos.puntos.Service;
 
+import com.consultapuntos.puntos.Dto.CreatePointRequest;
+import com.consultapuntos.puntos.Dto.PointResponse;
+import com.consultapuntos.puntos.Dto.UpdatePointRequest;
 import com.consultapuntos.puntos.Entity.Puntos;
 
 import java.util.List;
 
 public interface PuntosService {
 
-    Puntos create(Puntos punto); // Crear un nuevo registro
+    PointResponse create(CreatePointRequest request); // Crear un nuevo registro
 
-    Puntos update(Integer codigo, Puntos punto); // Actualizar propiedades por código
+    PointResponse update(Integer codigo, UpdatePointRequest request);  // Actualizar propiedades por código
 
-    List<Puntos> list(); // Listar todos los puntos
-
-    List<Puntos> findByCodigo(Integer codigo); // Buscar por código
-
-    List<Puntos> findByNombre(String nombre); // Buscar por nombre
-
-    List<Puntos> findByIp(String ip); // Buscar por IP
+    List<PointResponse> list();
+    List<PointResponse> findByCodigo(Integer codigo);
+    List<PointResponse> findByNombre(String nombre);
+    List<PointResponse> findByIp(String ip);
+    List<PointResponse> findByCodigoAsText(String codigoTexto);
 
     void delete(Integer codigo); // Eliminar un punto por código
-
-    List<Puntos> findByCodigoAsText(String codigoTexto); // Buscar código como texto
-
     boolean existsByCodigo(Integer codigo);
 
 }
