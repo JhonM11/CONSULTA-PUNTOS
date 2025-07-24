@@ -48,6 +48,7 @@ public class JwtUtil {
         Map<String, Object> claims = new HashMap<>();
         if (userDetails instanceof User user) {
             claims.put("codeuser", user.getCodeuser());
+            claims.put("role", user.getRole().getName());
         }
 
         return Jwts.builder()
