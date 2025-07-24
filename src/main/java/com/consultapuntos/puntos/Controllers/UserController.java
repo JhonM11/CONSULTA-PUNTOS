@@ -14,10 +14,28 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+
+    @GetMapping("/listUsers")
+    public ResponseEntity<?> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
+    }
+
+
     @PostMapping("/create")
     public ResponseEntity<?> createUser(@RequestBody CreateUserRequest request) {
         return userService.createUser(request);
     }
+
+
+    @PatchMapping("/update-role")
+    public ResponseEntity<?> updateUserRole(
+            @RequestParam String codeuser,
+            @RequestParam Long roleId) {
+        return userService.updateUserRoleByCodeuser(codeuser, roleId);
+    }
+
+
+
 
 
     @PatchMapping("/change-passwd/{codeuser}")

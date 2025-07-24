@@ -2,6 +2,7 @@ package com.consultapuntos.puntos.Service;
 
 import com.consultapuntos.puntos.Dto.CreateUserRequest;
 import com.consultapuntos.puntos.Dto.ChangePasswordRequest;
+import com.consultapuntos.puntos.Dto.UsersResponse;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -13,5 +14,9 @@ public interface UserService {
     ResponseEntity<?> activateUser(String codeuser);
     ResponseEntity<?> getUserContext();
     ResponseEntity<?> resetPasswordByCodeuser(String codeuser);
+    List<UsersResponse> getAllUsers();
+    ResponseEntity<?> updateUserRoleByCodeuser(String codeuser, Long roleId);
+
+
 
 }

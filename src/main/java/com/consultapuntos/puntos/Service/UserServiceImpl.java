@@ -3,6 +3,7 @@ package com.consultapuntos.puntos.Service;
 import com.consultapuntos.puntos.Dto.CreateUserRequest;
 import com.consultapuntos.puntos.Dto.ChangePasswordRequest;
 import com.consultapuntos.puntos.Dto.UserContextResponse;
+import com.consultapuntos.puntos.Dto.UsersResponse;
 import com.consultapuntos.puntos.Entity.Role;
 import com.consultapuntos.puntos.Entity.User;
 import com.consultapuntos.puntos.Exception.*;
@@ -15,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -29,6 +31,41 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+
+    @Override
+    public List<UsersResponse> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(user -> new UsersResponse(
+                        user.getUsername(),
+                        user.getName(),
+                        user.getLastname(),
+                        user.getMail(),
+                        user.getCodeuser(),
+                        user.getRole().getName()
+                ))
+                .toList();
+    }
+
+
+    @Override
+    public ResponseEntity<?> updateUserRoleByCodeuser(String codeuser, Long roleId) {
+        User user = userRepository.findAll().stream()
+                .filter(u -> u.getCodeuser().equals(codeuser))
+                .findFirst()
+                .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado"));
+
+        Role role = roleRepository.findById(roleId)
+                .orElseThrow(() -> new RoleNotFoundException("Rol no válido"));
+
+        user.setRole(role);
+        userRepository.save(user);
+
+        return ResponseEntity.ok(Map.of("message", "Rol actualizado correctamente"));
+    }
+
+
+
 
     @Override
     public ResponseEntity<?> createUser(CreateUserRequest request) {

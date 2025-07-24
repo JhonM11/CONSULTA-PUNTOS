@@ -26,14 +26,19 @@ public class SecurityConfig {
         http.csrf().disable()
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/puntos/auth/**").permitAll()
+
                         //Autorizaciones para el usuarios con ROL ADMIN
                         // ****** ENTIDAD PUNTOS *******
                         .requestMatchers("/api/v1/puntos/create").hasAnyRole("ADMIN")
                         .requestMatchers("/api/v1/puntos/delete/**").hasAnyRole("ADMIN")
 
+                        // ****** ENTIDAD USERS *******
+                        .requestMatchers("/api/v1/puntos/users/update-role/**").hasAnyRole("ADMIN")
+
 
                         //Autorizaciones para el usuarios con ROL ADMIN y COORDINADOR
                         // ****** ENTIDAD PUNTOS *******
+                        .requestMatchers("/api/v1/puntos/users/listUsers").hasAnyRole("ADMIN","COORDINADOR")
                         .requestMatchers("/api/v1/puntos/users/create").hasAnyRole("ADMIN","COORDINADOR")
                         .requestMatchers("/api/v1/puntos/users/inactivate/").hasAnyRole("ADMIN","COORDINADOR")
                         .requestMatchers("/api/v1/puntos/users/activate/").hasAnyRole("ADMIN","COORDINADOR")
