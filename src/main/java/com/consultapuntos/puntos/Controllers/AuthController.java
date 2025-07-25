@@ -13,8 +13,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
+import static com.consultapuntos.puntos.Security.Config.ApiRoutes.AUTH;
+import static com.consultapuntos.puntos.Security.Config.ApiRoutes.BASE;
+
 @RestController
-@RequestMapping("/api/v1/puntos/auth")
 public class AuthController {
 
     @Autowired
@@ -26,7 +28,7 @@ public class AuthController {
     @Autowired
     private UserDetailsService userDetailsService;
 
-    @PostMapping("/login")
+    @PostMapping(AUTH)
     public ResponseEntity<?> login(@RequestBody AuthRequest authRequest) {
         try {
             authManager.authenticate(

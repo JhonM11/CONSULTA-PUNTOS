@@ -7,27 +7,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static com.consultapuntos.puntos.Security.Config.ApiRoutes.*;
+
 @RestController
-@RequestMapping("/api/v1/puntos/users")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
 
-    @GetMapping("/listUsers")
+    @GetMapping(USERS_LIST)
     public ResponseEntity<?> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
 
-    @PostMapping("/create")
+    @PostMapping(USERS_CREATE)
     public ResponseEntity<?> createUser(@RequestBody CreateUserRequest request) {
         return userService.createUser(request);
     }
 
 
-    @PatchMapping("/update-role")
+    @PatchMapping(USERS_UPDATE_ROLE)
     public ResponseEntity<?> updateUserRole(
             @RequestParam String codeuser,
             @RequestParam Long roleId) {
@@ -36,9 +37,7 @@ public class UserController {
 
 
 
-
-
-    @PatchMapping("/change-passwd/{codeuser}")
+    @PatchMapping(USERS_CHANGE_PASSWORD)
     public ResponseEntity<?> changePassword(
             @PathVariable String codeuser,
             @RequestBody ChangePasswordRequest request) {
@@ -46,25 +45,25 @@ public class UserController {
     }
 
 
-    @PatchMapping("/inactivate/{codeuser}")
+    @PatchMapping(USERS_INACTIVATE)
     public ResponseEntity<?> inactivateUser(@PathVariable String codeuser) {
         return userService.inactivateUser(codeuser);
     }
 
 
-    @PatchMapping("/activate/{codeuser}")
+    @PatchMapping(USERS_ACTIVATE)
     public ResponseEntity<?> activateUser(@PathVariable String codeuser) {
         return userService.activateUser(codeuser);
     }
 
 
-    @GetMapping("/mysession")
+    @GetMapping(USERS_MY_SESSION)
     public ResponseEntity<?> getUserContext() {
         return userService.getUserContext();
     }
 
 
-    @PatchMapping("/reset-password/{codeuser}")
+    @PatchMapping(USERS_RESET_PASSWORD)
     public ResponseEntity<?> resetPassword(@PathVariable String codeuser) {
         return userService.resetPasswordByCodeuser(codeuser);
     }

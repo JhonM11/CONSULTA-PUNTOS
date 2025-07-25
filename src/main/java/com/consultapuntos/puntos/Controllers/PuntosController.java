@@ -14,15 +14,17 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+
+import static com.consultapuntos.puntos.Security.Config.ApiRoutes.*;
+
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/api/v1/puntos")
 public class PuntosController {
 
     @Autowired
     private PuntosService puntosService;
 
-    @PostMapping("/create")
+    @PostMapping(PUNTOS_CREATE)
     public ResponseEntity<PointResponse> create(@RequestBody CreatePointRequest request) {
         PointResponse creado = puntosService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(creado);
@@ -36,47 +38,47 @@ public class PuntosController {
     }
 
 
-    @PutMapping("/update/{codigo}")
+    @PutMapping(PUNTOS_UPDATE)
     public ResponseEntity<PointResponse> update(@PathVariable Integer codigo, @RequestBody UpdatePointRequest request) {
         PointResponse actualizado = puntosService.update(codigo, request);
         return ResponseEntity.ok(actualizado);
     }
 
 
-    @GetMapping("/list")
+    @GetMapping(PUNTOS_LIST)
     public ResponseEntity<List<PointResponse>> list() {
         return ResponseEntity.ok(puntosService.list());
     }
 
-    @GetMapping("/findByCodigo/{codigo}")
+    @GetMapping(PUNTOS_FIND_BY_CODIGO)
     public ResponseEntity<List<PointResponse>> findByCodigo(@PathVariable Integer codigo) {
         return ResponseEntity.ok(puntosService.findByCodigo(codigo));
     }
 
-    @GetMapping("/findByNombre/{nombre}")
+    @GetMapping(PUNTOS_FIND_BY_NOMBRE)
     public ResponseEntity<List<PointResponse>> findByNombre(@PathVariable String nombre) {
         return ResponseEntity.ok(puntosService.findByNombre(nombre));
     }
 
-    @GetMapping("/findByIp/{ip}")
+    @GetMapping(PUNTOS_FIND_BY_IP)
     public ResponseEntity<List<PointResponse>> findByIp(@PathVariable String ip) {
         return ResponseEntity.ok(puntosService.findByIp(ip));
     }
 
-    @GetMapping("/findByCodigoAsText/{texto}")
+    @GetMapping(PUNTOS_FIND_BY_CODIGO_AS_TEXT)
     public ResponseEntity<List<PointResponse>> findByCodigoAsText(@PathVariable String texto) {
         return ResponseEntity.ok(puntosService.findByCodigoAsText(texto));
     }
 
 
-    @DeleteMapping("/delete/{codigo}")
+    @DeleteMapping(PUNTOS_DELETE)
     public ResponseEntity<Void> delete(@PathVariable Integer codigo) {
         puntosService.delete(codigo);
         return ResponseEntity.noContent().build(); // Respuesta sin contenido
     }
 
 
-    @GetMapping("/reports")
+    @GetMapping(PUNTOS_REPORTS)
     public ResponseEntity<byte[]> descargarReporte(
             @RequestParam(required = false) Integer tipoConexionCode,
             @RequestParam(required = false) Integer zonaCode,
@@ -91,7 +93,7 @@ public class PuntosController {
     }
 
 
-    @GetMapping("/reports-FormatAnsible")
+    @GetMapping(PUNTOS_REPORTS_FORMAT_ANSIBLE)
     public ResponseEntity<byte[]> descargarReporteWirelessTxt(
             @RequestParam(required = false) Integer centroCostoCode,
             @RequestParam(required = false) Integer zonaCode,
@@ -108,10 +110,6 @@ public class PuntosController {
                 .header("Content-Type", "text/plain")
                 .body(archivo);
     }
-
-
-
-
 
 
 

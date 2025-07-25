@@ -8,29 +8,30 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.consultapuntos.puntos.Security.Config.ApiRoutes.*;
+
 @RestController
-@RequestMapping("/api/v1/puntos/centros-costos")
 public class CentroCostoController {
 
     @Autowired
     private CentroCostoService centroCostoService;
 
-    @GetMapping("/findByCode/{code}")
+    @GetMapping(CCOSTO_FIND_BY_CODE)
     public ResponseEntity<CentroCostoDto> findByCode(@PathVariable Integer code) {
         return ResponseEntity.ok(centroCostoService.findByCode(code));
     }
 
-    @GetMapping("/list")
+    @GetMapping(CCOSTO_LIST)
     public ResponseEntity<List<CentroCostoDto>> findAll() {
         return ResponseEntity.ok(centroCostoService.findAll());
     }
 
-    @PatchMapping("/updateName/{code}")
+    @PatchMapping(CCOSTO_UPDATE_NAME)
     public ResponseEntity<CentroCostoDto> updateName(@PathVariable Integer code, @RequestParam String newName) {
         return ResponseEntity.ok(centroCostoService.updateName(code, newName));
     }
 
-    @PostMapping("/create")
+    @PostMapping(CCOSTO_CREATE)
     public ResponseEntity<CentroCostoDto> create(@RequestParam String name) {
         return ResponseEntity.ok(centroCostoService.createCentro(name));
     }
