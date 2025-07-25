@@ -4,6 +4,7 @@ import com.consultapuntos.puntos.Dto.CreatePointRequest;
 import com.consultapuntos.puntos.Dto.PointResponse;
 import com.consultapuntos.puntos.Dto.UpdatePointRequest;
 import com.consultapuntos.puntos.Entity.Puntos;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -26,6 +27,13 @@ public interface PuntosService {
 
     byte[] generatePlainTextReportForWireless(Integer centroCostoCode, Integer zonaCode);
 
+
+
+    List<PointResponse> bulkInsertFromExcel(MultipartFile file);
+
+    Integer getTipoConexionCodeByName(String name);
+    Integer getZonaCodeByName(String name);
+    Integer getCentroCostoCodeByName(String name);
 
 
 

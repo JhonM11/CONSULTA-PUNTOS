@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface CentroCostoRepository extends JpaRepository<CentroCosto, Long> {
     Optional<CentroCosto> findByCode(Integer code);
     boolean existsByNameIgnoreCase(String name);
+    Optional<CentroCosto> findByNameIgnoreCase(String name);
 }

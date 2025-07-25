@@ -44,6 +44,7 @@ public class SecurityConfig {
                         .requestMatchers(PUNTOS_UPDATE).hasAnyRole("ADMIN", "COORDINADOR")
                         .requestMatchers(PUNTOS_REPORTS).hasAnyRole("ADMIN", "COORDINADOR")
                         .requestMatchers(PUNTOS_REPORTS_FORMAT_ANSIBLE).hasAnyRole("ADMIN", "COORDINADOR")
+                        .requestMatchers(PUNTOS_IMPORT_EXCEL).hasAnyRole("ADMIN", "COORDINADOR")
 
                         .requestMatchers(TIPO_CONEXION_FIND_BY_CODE).hasAnyRole("ADMIN", "COORDINADOR")
                         .requestMatchers(TIPO_CONEXION_GET_ALL).hasAnyRole("ADMIN", "COORDINADOR")

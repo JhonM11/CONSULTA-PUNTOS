@@ -8,5 +8,6 @@ import java.util.Optional;
 public interface ZonaRepository extends JpaRepository<Zona, Long> {
     Optional<Zona> findByCode(Integer code);
     boolean existsByNameIgnoreCase(String name);
+    Optional<Zona> findByNameIgnoreCase(String name);
 }
 

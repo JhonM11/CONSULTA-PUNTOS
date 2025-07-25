@@ -12,5 +12,5 @@ public interface TipoConexionRepository extends JpaRepository<TipoConexion, Long
     Optional<TipoConexion> findByCode(Integer code);
     boolean existsByCode(Integer code);
     boolean existsByNameIgnoreCase(String name);
-
+    Optional<TipoConexion> findByNameIgnoreCase(String name);
 }
