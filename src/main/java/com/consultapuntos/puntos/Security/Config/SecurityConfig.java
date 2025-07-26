@@ -31,6 +31,7 @@ public class SecurityConfig {
                         .requestMatchers(AUTH).permitAll()
                         .requestMatchers(PUNTOS_DOWNLOAD_TEMPLATE).permitAll()
 
+
                         // === ADMIN ===
                         .requestMatchers(PUNTOS_CREATE).hasRole("ADMIN")
                         .requestMatchers(PUNTOS_DELETE).hasRole("ADMIN")
@@ -64,7 +65,7 @@ public class SecurityConfig {
 
                         // === ADMIN, COORDINADOR y AUXILIAR ===
                         .requestMatchers(USERS_CHANGE_PASSWORD).hasAnyRole("ADMIN", "COORDINADOR", "AUXILIAR")
-                        .requestMatchers(USERS_MY_SESSION).hasAnyRole("ADMIN", "COORDINADOR", "AUXILIAR")
+                         .requestMatchers(USERS_MY_SESSION).hasAnyRole("ADMIN", "COORDINADOR", "AUXILIAR")
 
                         .requestMatchers(PUNTOS_LIST).hasAnyRole("ADMIN", "COORDINADOR", "AUXILIAR")
                         .requestMatchers(PUNTOS_FIND_BY_CODIGO).hasAnyRole("ADMIN", "COORDINADOR", "AUXILIAR")

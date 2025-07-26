@@ -10,6 +10,7 @@ import java.util.List;
 
 import static com.consultapuntos.puntos.Security.Config.ApiRoutes.*;
 
+
 @RestController
 public class ZonaController {
 

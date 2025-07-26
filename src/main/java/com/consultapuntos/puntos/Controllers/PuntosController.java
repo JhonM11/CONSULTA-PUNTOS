@@ -24,7 +24,6 @@ import java.util.List;
 
 import static com.consultapuntos.puntos.Security.Config.ApiRoutes.*;
 
-@CrossOrigin(origins = "*")
 @RestController
 public class PuntosController {
 
