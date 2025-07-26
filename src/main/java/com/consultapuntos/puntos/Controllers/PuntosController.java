@@ -6,12 +6,18 @@ import com.consultapuntos.puntos.Dto.UpdatePointRequest;
 import com.consultapuntos.puntos.Entity.Puntos;
 import com.consultapuntos.puntos.Service.PuntosService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -120,6 +126,23 @@ public class PuntosController {
         List<PointResponse> insertedPoints = puntosService.bulkInsertFromExcel(file);
         return ResponseEntity.ok(insertedPoints);
     }
+
+
+
+    @GetMapping(PUNTOS_DOWNLOAD_TEMPLATE)
+    public ResponseEntity<Resource> descargarPlantillaFisica() throws IOException {
+        ClassPathResource plantilla = new ClassPathResource("static/templates/plantillaImport.xlsx");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=plantillaImport.xlsx");
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentLength(plantilla.contentLength())
+                .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                .body(new InputStreamResource(plantilla.getInputStream()));
+    }
+
 
 
 }

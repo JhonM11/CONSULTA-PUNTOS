@@ -29,6 +29,7 @@ public class SecurityConfig {
 
                         // === AUTH (Permitido a todos) ===
                         .requestMatchers(AUTH).permitAll()
+                        .requestMatchers(PUNTOS_DOWNLOAD_TEMPLATE).permitAll()
 
                         // === ADMIN ===
                         .requestMatchers(PUNTOS_CREATE).hasRole("ADMIN")

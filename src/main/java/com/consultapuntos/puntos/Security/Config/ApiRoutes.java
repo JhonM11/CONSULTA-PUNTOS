@@ -30,6 +30,7 @@ public class ApiRoutes {
     public static final String PUNTOS_FIND_BY_IP = BASE + "/findByIp/{ip}";
     public static final String PUNTOS_FIND_BY_CODIGO_AS_TEXT = BASE + "/findByCodigoAsText/{texto}";
     public static final String PUNTOS_IMPORT_EXCEL = BASE + "/upload-excel";
+    public static final String PUNTOS_DOWNLOAD_TEMPLATE = BASE + "/download-template";
 
     // === TIPO CONEXIONES ===
     public static final String BASE_TIPO_CONEXION = BASE + "/tipo-conexiones";
