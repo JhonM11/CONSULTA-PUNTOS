@@ -249,11 +249,11 @@ public class PuntosServiceImpl implements PuntosService {
 
 
     @Override
-    public byte[] generateReport(Integer tipoConexionCode, Integer zonaCode, Integer centroCostoCode) {
+    public byte[] generateReport(List<Integer> tipoConexionCodes, List<Integer> zonaCodes, List<Integer> centroCostoCodes) {
         List<Puntos> puntos = puntosRepository.findAll().stream()
-                .filter(p -> tipoConexionCode == null || p.getTipoConexion().getCode().equals(tipoConexionCode))
-                .filter(p -> zonaCode == null || p.getZona().getCode().equals(zonaCode))
-                .filter(p -> centroCostoCode == null || p.getCentroCosto().getCode().equals(centroCostoCode))
+                .filter(p -> tipoConexionCodes == null || tipoConexionCodes.isEmpty() || tipoConexionCodes.contains(p.getTipoConexion().getCode()))
+                .filter(p -> zonaCodes == null || zonaCodes.isEmpty() || zonaCodes.contains(p.getZona().getCode()))
+                .filter(p -> centroCostoCodes == null || centroCostoCodes.isEmpty() || centroCostoCodes.contains(p.getCentroCosto().getCode()))
                 .collect(Collectors.toList());
 
         try (Workbook workbook = new XSSFWorkbook()) {
@@ -303,25 +303,24 @@ public class PuntosServiceImpl implements PuntosService {
 
 
 
+
     @Override
-    public byte[] generatePlainTextReportForWireless(Integer centroCostoCode, Integer zonaCode) {
+    public byte[] generatePlainTextReportForWireless(List<Integer> centroCostoCodes, List<Integer> zonaCodes, List<Integer> tipoConexionCodes) {
         List<Puntos> puntos = puntosRepository.findAll().stream()
-                .filter(p -> p.getTipoConexion() != null && p.getTipoConexion().getCode() == 2)
-                .filter(p -> centroCostoCode == null || (p.getCentroCosto() != null && p.getCentroCosto().getCode().equals(centroCostoCode)))
-                .filter(p -> zonaCode == null || (p.getZona() != null && p.getZona().getCode().equals(zonaCode)))
+                .filter(p -> tipoConexionCodes == null || tipoConexionCodes.isEmpty() || (p.getTipoConexion() != null && tipoConexionCodes.contains(p.getTipoConexion().getCode())))
+                .filter(p -> centroCostoCodes == null || centroCostoCodes.isEmpty() || (p.getCentroCosto() != null && centroCostoCodes.contains(p.getCentroCosto().getCode())))
+                .filter(p -> zonaCodes == null || zonaCodes.isEmpty() || (p.getZona() != null && zonaCodes.contains(p.getZona().getCode())))
                 .collect(Collectors.toList());
 
         StringBuilder sb = new StringBuilder();
         for (Puntos p : puntos) {
-            String nombreFormateado = p.getNombre().trim().replaceAll("\\s+", "_");
-            String linea = String.format("%-30s ansible_ssh_host=%s", p.getCodigo() + "_" + nombreFormateado, p.getPcVenta());
+            String nombreFormateado = p.getNombre().trim().replaceAll("\\s+", "_").toUpperCase();
+            String linea = String.format("%-60s ansible_ssh_host=%s", p.getCodigo() + "_" + nombreFormateado, p.getPcVenta());
             sb.append(linea).append(System.lineSeparator());
         }
 
         return sb.toString().getBytes(StandardCharsets.UTF_8);
     }
-
-
 
 
 

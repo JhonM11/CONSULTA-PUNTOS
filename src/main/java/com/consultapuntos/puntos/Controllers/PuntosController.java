@@ -86,9 +86,9 @@ public class PuntosController {
 
     @GetMapping(PUNTOS_REPORTS)
     public ResponseEntity<byte[]> descargarReporte(
-            @RequestParam(required = false) Integer tipoConexionCode,
-            @RequestParam(required = false) Integer zonaCode,
-            @RequestParam(required = false) Integer centroCostoCode) {
+            @RequestParam(required = false) List<Integer> tipoConexionCode,
+            @RequestParam(required = false) List<Integer> zonaCode,
+            @RequestParam(required = false) List<Integer> centroCostoCode) {
 
         byte[] archivo = puntosService.generateReport(tipoConexionCode, zonaCode, centroCostoCode);
 
@@ -98,24 +98,25 @@ public class PuntosController {
                 .body(archivo);
     }
 
-
     @GetMapping(PUNTOS_REPORTS_FORMAT_ANSIBLE)
     public ResponseEntity<byte[]> descargarReporteWirelessTxt(
-            @RequestParam(required = false) Integer centroCostoCode,
-            @RequestParam(required = false) Integer zonaCode,
+            @RequestParam(required = false) List<Integer> centroCostoCode,
+            @RequestParam(required = false) List<Integer> zonaCode,
+            @RequestParam(required = false) List<Integer> tipoConexionCode,
             @RequestParam(defaultValue = "puntos_formato_ansible") String filename) {
 
-        byte[] archivo = puntosService.generatePlainTextReportForWireless(centroCostoCode, zonaCode);
+        byte[] archivo = puntosService.generatePlainTextReportForWireless(centroCostoCode, zonaCode, tipoConexionCode);
 
-        // Codificar el nombre para que respete espacios en el header HTTP
         String encodedFilename = URLEncoder.encode(filename.trim(), StandardCharsets.UTF_8)
-                .replace("+", " "); // Para que los espacios se vean como tal
+                .replace("+", " ");
 
         return ResponseEntity.ok()
                 .header("Content-Disposition", "attachment; filename=\"" + encodedFilename + "\"")
                 .header("Content-Type", "text/plain")
                 .body(archivo);
     }
+
+
 
 
 

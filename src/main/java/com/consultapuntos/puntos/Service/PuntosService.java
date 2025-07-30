@@ -23,9 +23,9 @@ public interface PuntosService {
     void delete(Integer codigo); // Eliminar un punto por código
     boolean existsByCodigo(Integer codigo);
 
-    byte[] generateReport(Integer tipoConexionCode, Integer zonaCode, Integer centroCostoCode);
+    byte[] generateReport(List<Integer> tipoConexionCodes, List<Integer> zonaCodes, List<Integer> centroCostoCodes);
 
-    byte[] generatePlainTextReportForWireless(Integer centroCostoCode, Integer zonaCode);
+    byte[] generatePlainTextReportForWireless(List<Integer> centroCostoCodes, List<Integer> zonaCodes, List<Integer> tipoConexionCodes);
 
 
 
