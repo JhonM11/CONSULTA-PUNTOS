@@ -12,4 +12,5 @@ public class UsersResponse {
     private String mail;
     private String codeuser;
     private String role;
+    private String state;
 }
