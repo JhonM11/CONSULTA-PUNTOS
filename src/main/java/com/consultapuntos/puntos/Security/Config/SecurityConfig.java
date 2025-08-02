@@ -38,7 +38,6 @@ public class SecurityConfig {
                         // === ADMIN ===
                         .requestMatchers(PUNTOS_CREATE).hasRole("ADMIN")
                         .requestMatchers(PUNTOS_DELETE).hasRole("ADMIN")
-                        .requestMatchers(USERS_UPDATE_ROLE).hasRole("ADMIN")
 
                         // === ADMIN y COORDINADOR ===
                         .requestMatchers(USERS_LIST).hasAnyRole("ADMIN", "COORDINADOR")
@@ -50,6 +49,7 @@ public class SecurityConfig {
                         .requestMatchers(PUNTOS_REPORTS).hasAnyRole("ADMIN", "COORDINADOR")
                         .requestMatchers(PUNTOS_REPORTS_FORMAT_ANSIBLE).hasAnyRole("ADMIN", "COORDINADOR")
                         .requestMatchers(PUNTOS_IMPORT_EXCEL).hasAnyRole("ADMIN", "COORDINADOR")
+                        .requestMatchers(USERS_UPDATE_ROLE).hasAnyRole("ADMIN", "COORDINADOR")
 
                         .requestMatchers(TIPO_CONEXION_FIND_BY_CODE).hasAnyRole("ADMIN", "COORDINADOR")
                         .requestMatchers(TIPO_CONEXION_GET_ALL).hasAnyRole("ADMIN", "COORDINADOR")
