@@ -9,4 +9,8 @@ public interface CentroCostoRepository extends JpaRepository<CentroCosto, Long> 
     Optional<CentroCosto> findByCode(Integer code);
     boolean existsByNameIgnoreCase(String name);
     Optional<CentroCosto> findByNameIgnoreCase(String name);
+
+    // Sugerencia para generar el siguiente code sin escanear todo
+    Optional<CentroCosto> findTopByOrderByCodeDesc();
+
 }

@@ -8,5 +8,5 @@ public interface CentroCostoService {
     CentroCostoDto findByCode(Integer code);
     List<CentroCostoDto> findAll();
     CentroCostoDto updateName(Integer code, String newName);
-    CentroCostoDto createCentro(String name);
+    CentroCostoDto createCentro(String name, Integer zonaCode);
 }
