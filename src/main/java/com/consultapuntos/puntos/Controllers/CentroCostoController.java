@@ -32,7 +32,8 @@ public class CentroCostoController {
     }
 
     @PostMapping(CCOSTO_CREATE)
-    public ResponseEntity<CentroCostoDto> create(@RequestParam String name) {
-        return ResponseEntity.ok(centroCostoService.createCentro(name));
+    public ResponseEntity<CentroCostoDto> create(@RequestParam String name,
+                                                 @RequestParam Integer zonaCode) {
+        return ResponseEntity.ok(centroCostoService.createCentro(name, zonaCode));
     }
 }

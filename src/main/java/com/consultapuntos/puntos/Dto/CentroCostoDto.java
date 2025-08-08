@@ -10,4 +10,7 @@ import lombok.Setter;
 public class CentroCostoDto {
     private Integer code;
     private String name;
+
+    private Integer zonaCode;
+    private String zonaName;
 }

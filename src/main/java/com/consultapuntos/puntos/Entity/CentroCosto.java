@@ -19,5 +19,14 @@ public class CentroCosto {
 
     @Column(nullable = false)
     private String name;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(
+            name = "zona_code",               // FK en centros_costos
+            referencedColumnName = "code",    // Columna en la tabla zonas
+            nullable = false
+    )
+    private Zona zona;
+
 }
 
